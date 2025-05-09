@@ -6,8 +6,6 @@ from chromadb.config import Settings
 import chromadb.utils.embedding_functions as embedding_functions
 
 
-
-
 # ------------------ Configuration Paths ------------------
 
 pdf_directory = "./docs"
@@ -21,7 +19,7 @@ google_ef = embedding_functions.GoogleGenerativeAiEmbeddingFunction(api_key=goog
 
 client = PersistentClient(path=chromadb_folder)
 
-if collection_name not in [col.name for col in client.list_collections()]:
+if collection_name not in client.list_collections():
     collection = client.create_collection(name=collection_name, embedding_function=google_ef)
 else:
     collection = client.get_collection(name=collection_name, embedding_function=google_ef)
@@ -57,7 +55,7 @@ for pdf_file in os.listdir(pdf_directory):
             )
             doc_count += 1
 
-            print(f"Chunk Preview: {chunk[:100]}")      #debugging
+            # print(f"Chunk Preview: {chunk[:100]}")      #debugging
             print(f"Stored chunk from {pdf_file} as ID {doc_id}")
         except Exception as e:
             print(f"Failed to process chunk: {e}")
